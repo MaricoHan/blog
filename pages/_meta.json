@@ -1,16 +1,21 @@
 {
-  "docs": {
+  "index": {
     "type": "page",
-    "title": "Documentation"
+    "title": "主页"
   },
-  "about": {
-    "title": "About",
-    "type": "page"
+  "posts": {
+    "type": "page",
+    "title": "博客"
+  },
+  "treasure-box": {
+    "type": "menu",
+    "title": "百宝箱",
+    "items": {}
   },
   "contact": {
     "title": "Contact ↗",
     "type": "page",
-    "href": "https://twitter.com/shuding_",
+    "href": "https://github.com/maricohan",
     "newWindow": true
   }
 }
