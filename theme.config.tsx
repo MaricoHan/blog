@@ -1,7 +1,29 @@
 import React from 'react'
 import type { DocsThemeConfig } from 'nextra-theme-docs'
+import { useRouter } from 'next/router'
+
+const title = "稀饭咖啡"
 
 const config: DocsThemeConfig = {
+  useNextSeoProps: () => {
+    const router = useRouter();
+
+    const seoProps = {
+      description: "稀饭咖啡的个人博客",
+    }
+
+    if (router.asPath == '/') {
+      return {
+        ...seoProps,
+        title: title,
+      }
+    } else {
+      return {
+        ...seoProps,
+        titleTemplate: "%s - 稀饭咖啡"
+      }
+    }
+  },
   logo: (
     <>
       <svg width="24" height="24" viewBox="0 0 24 24">
@@ -11,7 +33,7 @@ const config: DocsThemeConfig = {
         />
       </svg>
       <span style={{ marginLeft: '.4em', fontWeight: 800 }}>
-        稀饭咖啡
+        title
       </span>
     </>
   ),
