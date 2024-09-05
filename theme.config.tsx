@@ -45,7 +45,7 @@ const config: DocsThemeConfig = {
     content: "遇到问题？提交反馈 ->"
   },
   editLink: {
-    text: "修改此页内容 ->"
+    text: "修改此页内容，贡献一下 ->"
   },
   sidebar: {
     toggleButton: true
