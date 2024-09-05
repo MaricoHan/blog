@@ -18,7 +18,7 @@ const config: DocsThemeConfig = {
   project: {
     link: 'https://github.com/MaricoHan/blog',
   },
-  docsRepositoryBase: 'https://github.com/MaricoHan/blog',
+  docsRepositoryBase: 'https://github.com/MaricoHan/blog/tree/main',
   feedback: {
     content: "遇到问题？提交反馈 ->"
   },
