@@ -21,7 +21,7 @@ Go 中的 profiling 数据的类型和结构是通过 `profile.proto` 文件定�
 > - 标签（Label）和其他元数据
 ## pprof 与 profiling 的关系
 
-pprof 扮演着两个角色，一个是采集 profiling 数据，一个是分析 profiling 数据。
+pprof 扮演着两个角色：采集 profiling 数据、分析 profiling 数据。
 ### 采集 profiling 数据
 
 Go 中是通过 build-in 的 pprof 包采集 profiling 数据的，有下面两种方式：
