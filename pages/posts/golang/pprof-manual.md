@@ -120,7 +120,7 @@ func main() {
 
 在这个例子中，程序启动了一个 HTTP 服务器，pprof 的性能数据可以通过访问 `http://localhost:8080/debug/pprof/` 来获取。最直观的可以打开浏览器访问该地址，即可看到采集到的各种分析数据：
 
-![](pprof-manual-assets/images/http-debug-pprof.png)
+![](./pprof-manual-assets/images/http-debug-pprof.png)
 
 **下载 profiling 数据：** 当线上服务出现异常现象时，常常需要立即将 profiling 数据下载到本地，这样可以避免服务异常重启导致 profiling 数据丢失，然后再进行后续的分析。可以通过 curl 命令下载上面的各种数据，例如下载 goroutine 数据，可以执行 `curl http://localhost:8080/debug/pprof/goroutine -o goroutine.prof`。
 ### 分析 profiling 数据
@@ -312,7 +312,7 @@ pprof 可以生成 DOT 格式的图形化报告，同时可以使用 graphviz �
 
 以下面的图形化报告为例：
 
-![](pprof-manual-assets/images/interpret-callgraph.png)
+![](./pprof-manual-assets/images/interpret-callgraph.png)
 
 - 对于节点：
 	- (\*Rand).Read 有一个较小的 flat 值和一个较小的 cum 值，因为字体小且节点是灰色的。
@@ -341,7 +341,7 @@ pprof 可以生成 DOT 格式的图形化报告，同时可以使用 graphviz �
 
 这是默认展示的格式，其中节点代表函数，线代表调用关系。
 
-![](pprof-manual-assets/images/web-interface.png)
+![](./pprof-manual-assets/images/web-interface.png)
 
 例如：`FormatPack` 输出线指向 `FormatUntype`，表明前者调用后者。沿线的数字(5.72 s)表示 `FormatPack` 调用 `FormatUntype` 花费的时间。
 
@@ -349,7 +349,7 @@ pprof 可以生成 DOT 格式的图形化报告，同时可以使用 graphviz �
 
 切换到 `View/Flame graph`，将展示一个[火焰图](https://www.brendangregg.com/flamegraphs.html)。该图表示出了调用者/被调用者间紧凑的关系：
 
-![](pprof-manual-assets/images/flame-graph.png)
+![](./pprof-manual-assets/images/flame-graph.png)
 
 该图中的框对应函数之间的调用栈。caller 框位于 callee 框的正上方。每个框的宽度与 profile 数据文件中该位置的采样值的大小成正比。每个框下面的子框是从左向右按值从大到小排列的。
 
@@ -360,17 +360,17 @@ pprof 可以生成 DOT 格式的图形化报告，同时可以使用 graphviz �
 
 pprof 的火焰图扩展了传统的模型: 当一个函数被点击时，图会筛选出所有调用了该函数的堆栈数据。因此，单击任何 `FormatUntype` 框都会显示最终调用了 `FormatUntype` 的堆栈信息:
 
-![](pprof-manual-assets/images/view-callers.png)
+![](./pprof-manual-assets/images/view-callers.png)
 
 ####  Annotated Source Code
 
 右击函数 `FormatUntype` ，可以看到有些可选项：
 
-![](pprof-manual-assets/images/annotated-source-code.png)
+![](./pprof-manual-assets/images/annotated-source-code.png)
 
 选择 `Show source in new tab`，这将在新的标签页展示该函数被适当注释后的源代码。
 
-![](pprof-manual-assets/images/source-code.png)
+![](./pprof-manual-assets/images/source-code.png)
 
 上面的源代码中，每行有两个值：
 - 第一个值：当前行直接执行的时间。
@@ -381,7 +381,7 @@ pprof 的火焰图扩展了传统的模型: 当一个函数被点击时，图会
 > 1. **内联函数调用的源代码**：在某些情况下，编译器会将函数调用的代码直接插入到调用点，而不是在执行时跳转到函数的独立代码块。这种做法称为内联（inlining），它可以减少函数调用的开销，但会导致源代码的膨胀。
 > 2. **对应的汇编代码**：汇编代码是源代码的低级表示，它更接近于计算机实际执行的机器指令。通过查看汇编代码，开发者可以了解程序在硬件层面上是如何执行的，包括寄存器的使用、内存访问等细节。
 
-![](pprof-manual-assets/images/click-line-207.png)
+![](./pprof-manual-assets/images/click-line-207.png)
 
 这样的深入分析有助于开发者理解代码在底层是如何执行的，以及如何可能影响程序的性能。通过这种方式，开发者可以更精确地定位性能瓶颈，理解代码的执行流程，以及做出相应的优化。这对于编写高效的程序代码非常重要。
 
@@ -389,12 +389,12 @@ pprof 的火焰图扩展了传统的模型: 当一个函数被点击时，图会
 
 有时，只按指令顺序查看反汇编而不与源代码交错是有帮助的。您可以通过`View/Disassembly`来实现这一点。
 
-![](pprof-manual-assets/images/disassembly.png)
+![](./pprof-manual-assets/images/disassembly.png)
 #### Top Functions
 
 有时，您可能会发现仅显示配置文件中顶部函数的表格很有帮助：
 
-![](pprof-manual-assets/images/top-funcs.png)
+![](./pprof-manual-assets/images/top-funcs.png)
 
 该表显示了两个指标：
 
@@ -406,7 +406,7 @@ pprof 的火焰图扩展了传统的模型: 当一个函数被点击时，图会
 
 此视图以简单的文本格式显示每个函数的调用方/调用方（火焰图形视图通常更有帮助），如下图所示：
 
-![](pprof-manual-assets/images/peek.png)
+![](./pprof-manual-assets/images/peek.png)
 
 ## 比对profiles
 
