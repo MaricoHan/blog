@@ -257,7 +257,7 @@ ROUTINE ======================== runtime.lock2 in /usr/local/go/src/runtime/lock
 > # -source_path：指定源代码的根目录（注意代码版本务必和导出 prof 文件的代码版本一致）
 > go tool pprof -trim_path xxx -source_path xxx cpu.prof
 > ```
-> 例如：报错信息为 ` Error: open /go/src/internal/xxx/xxx.go: no such file or directory`，本地的项目代码在文件夹`/users/username/codespace/my-project`下。可以重新执行 `go tool pprof -trim_path /go/src/ -source_path /users/username/codespace/my-project/ cpu.prof`接入交互式 shell，再次使用 list 即可看到源代码正常显示。
+> 例如：报错信息为 ` Error: open /go/src/internal/xxx/xxx.go: no such file or directory`，本地的项目代码在文件夹`/users/username/codespace/my-project`下。可以重新执行 `go tool pprof -trim_path /go/src/ -source_path /users/username/codespace/my-project/ cpu.prof`进入交互式 shell，再次使用 list 即可看到源代码正常显示。
 
 ### Web 交互
 
