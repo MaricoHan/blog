@@ -205,7 +205,7 @@ go tool pprof -trim [options] source
 ```
 $ go tool pprof cpu.prof
 ```
-3. 使用 top 命令显示 top n 条耗资源的函数
+2. 使用 top 命令显示 top n 条耗资源的函数
 
 ```text
 (pprof) top 5
