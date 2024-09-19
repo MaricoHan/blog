@@ -5,7 +5,6 @@ pprof 是 Google 官方提供的对 profiling 数据进行可视化和分析的�
 本文更多的是概念性的解释，如果想看官方说明或快速入门，可以跳转至：
 - 官方说明：[https://github.com/Google/pprof](https://github.com/Google/pprof)
 - 快速入门： [https://github.com/wolfogre/go-pprof-practice](https://github.com/wolfogre/go-pprof-practice)
-
 ## 了解 profiling 
 
 在软件工程中，profiling (“profile”, “program profiling”, “software profiling”) 指的是一种动态的程序分析形式，用于测量程序的内存空间、时间复杂度、特定指令的使用情况或函数调用的频率和持续时间。最常见的是，profiling 数据用于帮助程序优化，更确切地说，是性能优化工程。
@@ -31,7 +30,7 @@ Go 中是通过 build-in 的 pprof 包采集 profiling 数据的，有下面两�
 
 #### 使用 `runtime/pprof` 包编程采集
 
-这个包是 pprof 的具体实现，可以通过编程的方式，手动控制采集哪些数据、何时开始采集、何时停止采集，例如下面采集 CPU 的使用情况：
+这个包是 pprof 的具体实现。使用该包，可以通过编程的方式，手动控制采集哪些数据、何时开始采集、何时停止采集，例如下面采集 CPU 的使用情况：
 
 ```go
 package main  
@@ -121,7 +120,7 @@ func main() {
 
 在这个例子中，程序启动了一个 HTTP 服务器，pprof 的性能数据可以通过访问 `http://localhost:8080/debug/pprof/` 来获取。最直观的可以打开浏览器访问该地址，即可看到采集到的各种分析数据：
 
-![](./pprof-manual-assets/images/http-debug-pprof.png)
+![](pprof-manual-assets/images/http-debug-pprof.png)
 
 **下载 profiling 数据：** 当线上服务出现异常现象时，常常需要立即将 profiling 数据下载到本地，这样可以避免服务异常重启导致 profiling 数据丢失，然后再进行后续的分析。可以通过 curl 命令下载上面的各种数据，例如下载 goroutine 数据，可以执行 `curl http://localhost:8080/debug/pprof/goroutine -o goroutine.prof`。
 ### 分析 profiling 数据
@@ -183,33 +182,32 @@ go tool pprof <format> [options] <source>
     -weblist         Display annotated source in a web browser
 ```
 
-例如执行以下命令，可以看到当前文件夹下生成了一份 pdf 报告：
+例如执行以下命令，可以看到当前文件夹下生成了一份 svg 报告：
 
 ```
-go tool pprof -pdf cpu.prof
+go tool pprof -svg cpu.prof > cpu.svg
 ```
+
+执行以下
 
 ### 终端交互
 
 如果在命令中不指定 format，将自动开启命令行交互功能：
 
 ```
-go tool pprof [options] source
+go tool pprof -trim [options] source
 ```
 
 这将开启一个交互式的 shell，用户可以在这里输入一些指令。可以输入 `help` 来获取帮助。
 
 通常步骤是：
-1. 使用 top 命令显示 top n 条耗资源的函数
+1. 开启交互式 shell
+```
+$ go tool pprof cpu.prof
+```
+3. 使用 top 命令显示 top n 条耗资源的函数
 
 ```text
-$ go tool pprof cpu.prof
-File: wenchangchain-native
-Build ID: 0dfea2918afee11535adf613f4af664d899e4126
-Type: cpu
-Time: Aug 22, 2024 at 1:39pm (CST)
-Duration: 30.10s, Total samples = 92.54s (307.44%)
-Entering interactive mode (type "help" for commands, "o" for options)
 (pprof) top 5
 Showing nodes accounting for 80.69s, 87.19% of 92.54s total
 Dropped 37 nodes (cum <= 0.46s)
@@ -222,7 +220,7 @@ Showing top 5 nodes out of 18
      6.59s  7.12% 87.19%      6.59s  7.12%  runtime.osyield
 ```
 
-3. 使用 list 命令查看指定函数的源代码，这会在特定的行显示 flat 和 cum 时间。
+ 3. 使用 list 命令查看指定函数的源代码，这会在特定的行显示 flat 和 cum 时间。
 
 ```text
 (pprof) list runtime.lock2
@@ -250,16 +248,28 @@ ROUTINE ======================== runtime.lock2 in /usr/local/go/src/runtime/lock
 ```
 
 
+> **注意**：此时如果报错：`no such file or directory`，这是因为此时根据运行时采集的源代码路径查找源代码，却在本地找不到。
+> 
+> 重新指定源代码的位置即可，执行：
+> 
+> ```
+> # -trim_path：裁剪掉指定的路径前缀
+> # -source_path：指定源代码的根目录（注意代码版本务必和导出 prof 文件的代码版本一致）
+> go tool pprof -trim_path xxx -source_path xxx cpu.prof
+> ```
+> 例如：报错信息为 ` Error: open /go/src/internal/xxx/xxx.go: no such file or directory`，本地的项目代码在文件夹`/users/username/codespace/my-project`下。可以重新执行 `go tool pprof -trim_path /go/src/ -source_path /users/username/codespace/my-project/ cpu.prof`接入交互式 shell，再次使用 list 即可看到源代码正常显示。
 
 ### Web 交互
 
 如果像下面这样，指定 host:port：
 
 ```
-pprof -http=[host]:[port] [options] source
+go tool pprof -http=[host]:[port] [options] source
 ```
 
 pprof 将在指定端口启动处理 http 请求的服务。在浏览器访问 `http://<host>:<port>/` 即可看到交互界面。
+
+>**注意**：这里和上面终端交互一样，可能会遇到源代码显示不出来的问题，需要指定源代码的路径 `go tool pprof -http=[host]:[port] -trim_path xxx -source_path xxx cpu.prof`
 ## 报告解释
 
 pprof 的目标是为 profile 数据生成报告。而这个报告是根据位置层次结构生成的，也就是说生成的是一个具有层次结构、展现调用关系的报告，其中每个层次的位置节点都包含两个数值：
@@ -302,7 +312,7 @@ pprof 可以生成 DOT 格式的图形化报告，同时可以使用 graphviz �
 
 以下面的图形化报告为例：
 
-![](./pprof-manual-assets/images/interpret-callgraph.png)
+![](pprof-manual-assets/images/interpret-callgraph.png)
 
 - 对于节点：
 	- (\*Rand).Read 有一个较小的 flat 值和一个较小的 cum 值，因为字体小且节点是灰色的。
@@ -331,7 +341,7 @@ pprof 可以生成 DOT 格式的图形化报告，同时可以使用 graphviz �
 
 这是默认展示的格式，其中节点代表函数，线代表调用关系。
 
-![](./pprof-manual-assets/images/web-interface.png)
+![](pprof-manual-assets/images/web-interface.png)
 
 例如：`FormatPack` 输出线指向 `FormatUntype`，表明前者调用后者。沿线的数字(5.72 s)表示 `FormatPack` 调用 `FormatUntype` 花费的时间。
 
@@ -339,7 +349,7 @@ pprof 可以生成 DOT 格式的图形化报告，同时可以使用 graphviz �
 
 切换到 `View/Flame graph`，将展示一个[火焰图](https://www.brendangregg.com/flamegraphs.html)。该图表示出了调用者/被调用者间紧凑的关系：
 
-![](./pprof-manual-assets/images/flame-graph.png)
+![](pprof-manual-assets/images/flame-graph.png)
 
 该图中的框对应函数之间的调用栈。caller 框位于 callee 框的正上方。每个框的宽度与 profile 数据文件中该位置的采样值的大小成正比。每个框下面的子框是从左向右按值从大到小排列的。
 
@@ -350,17 +360,17 @@ pprof 可以生成 DOT 格式的图形化报告，同时可以使用 graphviz �
 
 pprof 的火焰图扩展了传统的模型: 当一个函数被点击时，图会筛选出所有调用了该函数的堆栈数据。因此，单击任何 `FormatUntype` 框都会显示最终调用了 `FormatUntype` 的堆栈信息:
 
-![](./pprof-manual-assets/images/view-callers.png)
+![](pprof-manual-assets/images/view-callers.png)
 
 ####  Annotated Source Code
 
 右击函数 `FormatUntype` ，可以看到有些可选项：
 
-![](./pprof-manual-assets/images/annotated-source-code.png)
+![](pprof-manual-assets/images/annotated-source-code.png)
 
 选择 `Show source in new tab`，这将在新的标签页展示该函数被适当注释后的源代码。
 
-![](./pprof-manual-assets/images/source-code.png)
+![](pprof-manual-assets/images/source-code.png)
 
 上面的源代码中，每行有两个值：
 - 第一个值：当前行直接执行的时间。
@@ -371,7 +381,7 @@ pprof 的火焰图扩展了传统的模型: 当一个函数被点击时，图会
 > 1. **内联函数调用的源代码**：在某些情况下，编译器会将函数调用的代码直接插入到调用点，而不是在执行时跳转到函数的独立代码块。这种做法称为内联（inlining），它可以减少函数调用的开销，但会导致源代码的膨胀。
 > 2. **对应的汇编代码**：汇编代码是源代码的低级表示，它更接近于计算机实际执行的机器指令。通过查看汇编代码，开发者可以了解程序在硬件层面上是如何执行的，包括寄存器的使用、内存访问等细节。
 
-![](./pprof-manual-assets/images/click-line-207.png)
+![](pprof-manual-assets/images/click-line-207.png)
 
 这样的深入分析有助于开发者理解代码在底层是如何执行的，以及如何可能影响程序的性能。通过这种方式，开发者可以更精确地定位性能瓶颈，理解代码的执行流程，以及做出相应的优化。这对于编写高效的程序代码非常重要。
 
@@ -379,12 +389,12 @@ pprof 的火焰图扩展了传统的模型: 当一个函数被点击时，图会
 
 有时，只按指令顺序查看反汇编而不与源代码交错是有帮助的。您可以通过`View/Disassembly`来实现这一点。
 
-![](./pprof-manual-assets/images/disassembly.png)
+![](pprof-manual-assets/images/disassembly.png)
 #### Top Functions
 
 有时，您可能会发现仅显示配置文件中顶部函数的表格很有帮助：
 
-![](./pprof-manual-assets/images/top-funcs.png)
+![](pprof-manual-assets/images/top-funcs.png)
 
 该表显示了两个指标：
 
@@ -394,7 +404,9 @@ pprof 的火焰图扩展了传统的模型: 当一个函数被点击时，图会
 该表最初按照 Flat 的递减排序，单击 Cum 表头将按其递减排序。
 #### Peek
 
-此视图以简单的文本格式显示每个函数的调用方/调用方。火焰图形视图通常更有帮助。
+此视图以简单的文本格式显示每个函数的调用方/调用方（火焰图形视图通常更有帮助），如下图所示：
+
+![](pprof-manual-assets/images/peek.png)
 
 ## 比对profiles
 
