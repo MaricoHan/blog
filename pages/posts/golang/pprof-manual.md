@@ -220,7 +220,7 @@ Showing top 5 nodes out of 18
      6.59s  7.12% 87.19%      6.59s  7.12%  runtime.osyield
 ```
 
- 3. 使用 list 命令查看指定函数的源代码，这会在特定的行显示 flat 和 cum 时间。
+ 3. 使用 list 命令查看指定函数的源代码，这会在特定的行显示 flat 和 cum 时间
 
 ```text
 (pprof) list runtime.lock2
