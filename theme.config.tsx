@@ -59,6 +59,7 @@ const config: DocsThemeConfig = {
       </a>
     )
   },
+  gitTimestamp: null,
   footer: {
     component: (
       <div>
