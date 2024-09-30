@@ -1,6 +1,6 @@
 {
-  "commit": "Commit",
-  "branch": "Branch",
-  "tag": "Tag",
+  "commit": "提交（Commit）",
+  "branch": "分支（Branch）",
+  "tag": "标签（Tag）",
   "common-operations": "常用操作"
 }
