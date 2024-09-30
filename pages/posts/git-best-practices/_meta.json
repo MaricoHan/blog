@@ -1,5 +1,6 @@
 {
   "commit": "Commit",
   "branch": "Branch",
-  "tag": "Tag"
+  "tag": "Tag",
+  "common-operations": "常用操作"
 }
