@@ -118,7 +118,7 @@ Set-Cookie: sessionId=abc123; Expires=Wed, 09 Jun 2023 10:18:14 GMT; Path=/; Dom
 ⚠️ **安全提示**：**不要在 Cookie 中存储敏感信息**（如密码、信用卡号）。Cookie 通常以明文形式存储，易受攻击。
 
 
-## Cookie 如何影响网站性能？🔍
+## Cookie 如何影响网站性能?
 
 尽管 Cookie 提供了许多便利，但不合理的使用可能对网站性能产生负面影响。以下是主要的影响和优化建议：
 
