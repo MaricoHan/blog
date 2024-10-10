@@ -1,4 +1,5 @@
 {
   "get-ca-crt": "获取 CA 证书",
-  "cookie": "Cookie: 从起源到实践指南"
+  "cookie": "Cookie: 从起源到实践指南",
+  "uuid": "UUID 的结构和含义"
 }
