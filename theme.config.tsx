@@ -51,14 +51,14 @@ const config: DocsThemeConfig = {
   sidebar: {
     toggleButton: true
   },
-  banner: {
-    key: '2.0-release',
-    text: (
-      <a target="_blank">
-        🎉 博客正式上线，还在完善中，敬请期待～
-      </a>
-    )
-  },
+  // banner: {
+  //   key: '2.0-release',
+  //   text: (
+  //     <a target="_blank">
+  //       🎉 博客正式上线，还在完善中，敬请期待～
+  //     </a>
+  //   )
+  // },
   gitTimestamp: null,
   footer: {
     component: (

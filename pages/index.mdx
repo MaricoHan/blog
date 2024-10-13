@@ -1,0 +1,97 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { isatty } from 'tty';
+
+export default function Home() {
+  const mottos = [
+    "Work Less, Earn More.",
+    "向死而生"
+  ]
+  const [mottoValue, setmottoValue] = useState("");
+  const [isAdding, setIsAdding] = useState(true);
+  const [currentMottoIndex, setCurrentMottoIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false); // 用于控制暂停
+
+
+  // 完整输出和
+  useEffect(() => {
+    const motto = mottos[currentMottoIndex];
+    const intervalId = setInterval(() => {
+      // 如果暂停就啥也不干
+      if (isPaused) {
+        return
+      }
+
+      setmottoValue(currentValue => {
+        if (isAdding) {
+          if (currentValue.length == 0) {
+            return "|"
+          } else if (currentValue.length - 1 < motto.length) { // 在 "|" 前增加新字符
+            return currentValue.slice(0, -1) + motto[currentValue.length - 1] + '|';
+          } else {
+            // 显示完整后，暂停一段时间
+            setIsPaused(true); // 设置为暂停状态
+            setTimeout(() => {
+              setIsPaused(false); // 取消暂停状态
+              setIsAdding(false);// 切换为逐渐消失
+            }, 1000);
+            return currentValue.slice(0,-1);
+          }
+        } else {
+          if (currentValue.length > 1) { // 从倒数第二个字符开始逐渐消失，并且结尾一直带着 "|"
+            return currentValue.slice(0, -2) + '|';
+          } else if (currentValue.length == 1) { // 只剩光标时，清空
+            return ""
+          } else { // 全部消失时，切换 motto
+            setCurrentMottoIndex(currentMottoIndex => { return currentMottoIndex < mottos.length - 1 ? currentMottoIndex + 1 : 0 });
+            setIsAdding(true); // 切换为逐渐显示模式
+            return "";
+          }
+        }
+      });
+    }, isAdding ? 200 : 80);
+
+    // 清理定时器，以防内存泄漏。执行时机：组件卸载时、依赖项变化时（下一次执行 useEffect 之前）
+    return () => clearInterval(intervalId);
+  }, [isAdding, currentMottoIndex, isPaused]); // isAdding，isPaused 作为依赖，变化时重新设置定时器。因为一些依赖变化在内部函数捕捉不到，这几个就是这样。
+
+
+  return (
+    <div className="flex flex-col w-full h-full items-center">
+      {/* 个人信息卡片 */}
+      <div id="profile" className='mt-4'>
+        <article className="w-full flex flex-col items-center justify-center">
+          <header>
+            {/* 头像 */}
+            <img
+              src="/avatar.jpg"
+              alt="头像"
+              className='w-36 h-36 rounded-full'
+            />
+
+            {/* 名字 */}
+            <h1 className="text-4xl font-bold mt-2 ">稀饭咖啡</h1>
+
+            {/* 个人标签 */}
+            <div className="text-xl text-neutral-500 dark:text-neutral-400  font-bold mt-2">软件开发工程师</div>
+
+            {/* 社交媒体图标 */}
+            <div className="text-2xl mt-2">
+              <div className="flex flex-wrap text-neutral-400 dark:text-neutral-500">
+              </div>
+            </div>
+          </header>
+
+          <section id='profile-resume' className='flex flex-col items-center md:max-w-xl mt-4 space-y-4'>
+            <p className='font-bold' >
+              我是一名软件开发工程师，致力于创造高效、可扩展的软件解决方案，在这里记录技术探索和成长轨迹。您可以通过
+              <a className='no-underline dec' href='/wechat.png'>微信</a>和我联系。
+            </p>
+            <div className='font-bold text-xl h-8'>
+              {mottoValue}
+            </div>
+          </section>
+        </article>
+      </div>
+    </div>
+  );
+}

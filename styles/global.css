@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@font-face {
+    font-family: 'LXGW WenKai Screen';
+    src: url('/fonts/LXGWWenKai-Regular.ttf') format('woff2');
+}
+
+#profile-resume {
+    font-family: 'LXGW WenKai Screen',sans-serif;
+}
