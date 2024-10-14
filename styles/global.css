@@ -5,7 +5,7 @@
 
 @font-face {
     font-family: 'LXGW WenKai Screen';
-    src: url('/fonts/LXGWWenKai-Regular.ttf') format('woff2');
+    src: url('/fonts/LXGWWenKai-Regular.woff2') format('woff2');
 }
 
 #profile-resume {
