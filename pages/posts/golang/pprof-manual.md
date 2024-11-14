@@ -188,8 +188,6 @@ go tool pprof <format> [options] <source>
 go tool pprof -svg cpu.prof > cpu.svg
 ```
 
-执行以下
-
 ### 终端交互
 
 如果在命令中不指定 format，将自动开启命令行交互功能：
