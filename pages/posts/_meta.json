@@ -2,5 +2,6 @@
   "index": "简介",
   "golang": "Golang",
   "git-best-practices": "Git 规范和最佳实践",
-  "network": "网络安全"
+  "network": "网络安全",
+  "web-development": "Web 开发"
 }

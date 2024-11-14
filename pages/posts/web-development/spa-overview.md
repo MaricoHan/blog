@@ -12,6 +12,14 @@
 ## 演示实例
 
 为了演示 SPA 的基本构建方法，以下是一个简单的实现示例，包括 `index.html`、`Dockerfile` 和 `nginx.conf`，**这三个文件放在同一目录下即可**。
+
+```
+.
+├── Dockerfile
+├── index.html
+└── nginx.conf
+```
+
 ### 1. index.html
 
 ```html
@@ -35,7 +43,7 @@
         function navigate(event) {
             event.preventDefault();
             const path = event.target.getAttribute('href');
-            window.history.pushState({}, '', path); // 通过 pushState 更新路由
+            window.history.pushState({}, '', path); // <- 这是一个单页应用，是通过 js 中 pushState 方法来更新路由，所以无法通过文件的方式索引页面资源
             onRouteChange();
         }
 
@@ -50,8 +58,8 @@
             document.getElementById('content').innerHTML = content; 
         }
 
-        window.onpopstate = onRouteChange; // 处理浏览器的后退和前进按钮
-        onRouteChange(); // 初始路由内容加载
+        window.onpopstate = onRouteChange; // <- 处理浏览器的后退和前进按钮
+        onRouteChange(); // <- 基于当前的请求的路由更新显示的内容，刷新时靠这个保持页面内容
     </script>
 </body>
 </html>
